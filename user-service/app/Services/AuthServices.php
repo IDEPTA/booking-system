@@ -21,7 +21,7 @@ class AuthServices implements AuthServicesInterface
             //     $this->sendCodeConfirm($user);
             //     return "код отправлен в телеграмм. Срок действия 15 минут";
             // }
-            $token = $user->createToken("auth_token")->plainTextToken;
+            $token = $user->createToken("auth_token_" . $user->name . '_' . now(), ['*'], now()->addHours(2))->plainTextToken;
 
             return $token;
         }
@@ -35,7 +35,7 @@ class AuthServices implements AuthServicesInterface
         $newUser = User::create($validationData);
 
         if ($newUser) {
-            $token = $newUser->createToken("auth_token")->plainTextToken;
+            $token = $user->createToken("auth_token_" . $user->name . '_' . now(), ['*'], now()->addHours(2))->plainTextToken;
             return $token;
         }
 
