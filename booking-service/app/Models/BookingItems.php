@@ -18,7 +18,8 @@ class BookingItems extends Model
         'name',
         'address',
         'city',
-        'work_time',
+        'working_hours_from',
+        'working_hours_up_to',
         'booking_type',
         'booking_object'
     ];
