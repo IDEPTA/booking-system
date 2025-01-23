@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Models\BookingRecord;
+use App\Models\BookingRecords;
+
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 

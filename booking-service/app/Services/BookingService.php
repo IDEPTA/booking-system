@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Exception;
-use App\Models\BookingItems;
 use Illuminate\Http\Request;
+use App\Models\BookingObject;
 use App\Enums\BookingTypeEnum;
 use Illuminate\Validation\Rule;
 use App\Enums\BookingObjectEnum;
@@ -15,14 +15,14 @@ class BookingService implements BookingInterface
 {
     public function index()
     {
-        $bookingItems = BookingItems::all();
+        $bookingItems = BookingObject::all();
 
         return $bookingItems;
     }
 
     public function show(int $id)
     {
-        $bookingItem = BookingItems::find($id);
+        $bookingItem = BookingObject::find($id);
         if (!$bookingItem) {
             throw new Exception("booking item not found", 404);
         }
@@ -32,7 +32,7 @@ class BookingService implements BookingInterface
     public function create(Request $request)
     {
         $validationData = $this->validated($request);
-        $bookingItem = BookingItems::create($validationData);
+        $bookingItem = BookingObject::create($validationData);
 
         return $bookingItem;
     }
@@ -68,6 +68,8 @@ class BookingService implements BookingInterface
             ],
             'booking_type' => ['required', 'string', Rule::in(BookingTypeEnum::values())],
             'booking_object' => ['required', 'string', Rule::in(BookingObjectEnum::values())],
+            'user_id' => 'required',
+            'available' => 'required|boolean'
         ]);
         if ($validator->fails()) {
             throw new Exception($validator->errors(), 400);

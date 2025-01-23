@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BookingItems extends Model
+class BookingObject extends Model
 {
     use HasFactory;
 
@@ -21,6 +21,13 @@ class BookingItems extends Model
         'working_hours_from',
         'working_hours_up_to',
         'booking_type',
-        'booking_object'
+        'booking_object',
+        'user_id',
+        'available',
     ];
+
+    public function booking_post()
+    {
+        return $this->hasMany(BookingPost::class);
+    }
 }
