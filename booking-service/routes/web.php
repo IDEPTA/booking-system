@@ -27,10 +27,16 @@ $router->group(
         $router->get('/routes', function () use ($router) {
             return $router->getRoutes();
         });
-        $router->get('/bookingItems', "BookingItemsController@index");
-        $router->get('/bookingItems/{id}', "BookingItemsController@show");
-        $router->post('/bookingItems', "BookingItemsController@create");
-        $router->put('/bookingItems/{id}', "BookingItemsController@update");
-        $router->delete('/bookingItems/{id}', "BookingItemsController@delete");
+        $router->get('/bookingObjects', "BookingObjectsController@index");
+        $router->get('/bookingObjects/{id}', "BookingObjectsController@show");
+        $router->post('/bookingObjects', "BookingObjectsController@create");
+        $router->put('/bookingObjects/{id}', "BookingObjectsController@update");
+        $router->delete('/bookingObjects/{id}', "BookingObjectsController@delete");
+
+        $router->get('/bookingPosts', "BookingPostsController@index");
+        $router->get('/bookingPosts/{id}', "BookingPostsController@show");
+        $router->post('/bookingPosts', "BookingPostsController@create");
+        $router->put('/bookingPosts/{id}', "BookingPostsController@update");
+        $router->delete('/bookingPosts/{id}', "BookingPostsController@delete");
     }
 );

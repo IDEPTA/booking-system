@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\BookingInterface;
 use Illuminate\Http\Request;
+use App\Interfaces\BookingPostInterface;
 
-class BookingItemsController extends Controller
+
+
+class BookingPostsController extends Controller
 {
-
-    public function __construct(private readonly BookingInterface $bookingService) {}
+    public function __construct(private readonly BookingPostInterface $bookingPostService) {}
 
     public function index()
     {
         try {
-            $bookingItems = $this->bookingService->index();
+            $bookingItems = $this->bookingPostService->index();
 
             return response()->json([
                 "data" => $bookingItems,
@@ -31,7 +32,7 @@ class BookingItemsController extends Controller
     public function show(int $id)
     {
         try {
-            $bookingItem = $this->bookingService->show($id);
+            $bookingItem = $this->bookingPostService->show($id);
             return response()->json([
                 "data" => $bookingItem,
                 "success" => true
@@ -48,7 +49,7 @@ class BookingItemsController extends Controller
     public function create(Request $request)
     {
         try {
-            $newItem = $this->bookingService->create($request);
+            $newItem = $this->bookingPostService->create($request);
             return response()->json([
                 "data" => $newItem,
                 "success" => true
@@ -65,7 +66,7 @@ class BookingItemsController extends Controller
     public function update(Request $request, int $id)
     {
         try {
-            $updateItem = $this->bookingService->update($request, $id);
+            $updateItem = $this->bookingPostService->update($request, $id);
             return response()->json([
                 "data" => $updateItem,
                 "success" => true
@@ -82,7 +83,7 @@ class BookingItemsController extends Controller
     public function delete(int $id)
     {
         try {
-            $this->bookingService->delete($id);
+            $this->bookingPostService->delete($id);
             return response()->json([
                 "msg" => "Успешно удалено",
                 "success" => true
