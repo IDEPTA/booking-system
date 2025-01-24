@@ -4,7 +4,7 @@ namespace App\Interfaces;
 
 use Illuminate\Http\Request;
 
-interface BookingInterface
+interface BookingObjectInterface
 {
     public function index();
 

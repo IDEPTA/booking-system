@@ -19,6 +19,7 @@ return new class extends Migration
                 ->cascadeOnUpdate();
             $table->integer("price");
             $table->integer("available_slots");
+            $table->timestamps();
         });
     }
 

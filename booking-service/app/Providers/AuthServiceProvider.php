@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use Exception;
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -40,10 +43,18 @@ class AuthServiceProvider extends ServiceProvider
                 $hashedToken = hash('sha256', $plainTextToken);
                 $tokenFromDB = DB::table('personal_access_tokens')
                     ->where('id', $tokenId)
-                    ->whereAnd('token', $token)
-                    ->whereAnd('expires_at', '>', Carbon::now())
+                    ->where('token', $hashedToken)
+                    ->where('expires_at', '>', Carbon::now())
                     ->first();
-
+                if (!$tokenFromDB) {
+                    throw new AuthenticationException("Token not founded");
+                }
+                // log::info([
+                //     "token" => $token,
+                //     "tokenId" => $tokenId,
+                //     "hashedToken" => $hashedToken,
+                //     "tokenFromDB" => $tokenFromDB
+                // ]);
                 $user = DB::table('users')->where("id", $tokenFromDB->tokenable_id)->first();
 
                 return $user;

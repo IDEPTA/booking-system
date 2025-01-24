@@ -8,10 +8,10 @@ use App\Models\BookingObject;
 use App\Enums\BookingTypeEnum;
 use Illuminate\Validation\Rule;
 use App\Enums\BookingObjectEnum;
-use App\Interfaces\BookingInterface;
+use App\Interfaces\BookingObjectInterface;
 use Illuminate\Support\Facades\Validator;
 
-class BookingService implements BookingInterface
+class BookingObjectService implements BookingObjectInterface
 {
     public function index()
     {
@@ -48,8 +48,8 @@ class BookingService implements BookingInterface
 
     public function delete(int $id)
     {
-        $updatedBookingItem = $this->show($id);
-        $updatedBookingItem->delete();
+        $deleteBookingItem = $this->show($id);
+        $deleteBookingItem->delete();
     }
 
     public function validated(Request $request)
