@@ -39,13 +39,15 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->viaRequest('api', function ($request) {
             $token = $request->bearerToken();
             if ($token) {
+                $now = Carbon::now()->toDateTimeString();
                 list($tokenId, $plainTextToken) = explode('|', $token, 2);
                 $hashedToken = hash('sha256', $plainTextToken);
                 $tokenFromDB = DB::table('personal_access_tokens')
                     ->where('id', $tokenId)
-                    ->where('token', $hashedToken)
-                    ->where('expires_at', '>', Carbon::now())
+                    ->where('token',  "$hashedToken")
+                    ->where('expires_at', '>', "$now")
                     ->first();
+
                 if (!$tokenFromDB) {
                     throw new AuthenticationException("Token not founded");
                 }
@@ -53,7 +55,8 @@ class AuthServiceProvider extends ServiceProvider
                 //     "token" => $token,
                 //     "tokenId" => $tokenId,
                 //     "hashedToken" => $hashedToken,
-                //     "tokenFromDB" => $tokenFromDB
+                //     "tokenFromDB" => $tokenFromDB,
+                //     "date now" => Carbon::now()->toDateTimeString(),
                 // ]);
                 $user = DB::table('users')->where("id", $tokenFromDB->tokenable_id)->first();
 

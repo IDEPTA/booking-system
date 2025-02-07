@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Interfaces\BookingPostInterface;
 use Illuminate\Http\JsonResponse;
+use App\Interfaces\BookingRecordInterface;
 
-class BookingPostsController extends Controller
+class BookingRecordsController extends Controller
 {
-    public function __construct(private readonly BookingPostInterface $bookingPostService) {}
+    public function __construct(private readonly BookingRecordInterface $bookingRecordService) {}
 
     /**
      * @return JsonResponse
@@ -16,7 +16,7 @@ class BookingPostsController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $bookingItems = $this->bookingPostService->index();
+            $bookingItems = $this->bookingRecordService->index();
 
             return response()->json([
                 "data" => $bookingItems,
@@ -39,7 +39,7 @@ class BookingPostsController extends Controller
     public function show(int $id): JsonResponse
     {
         try {
-            $bookingItem = $this->bookingPostService->show($id);
+            $bookingItem = $this->bookingRecordService->show($id);
             return response()->json([
                 "data" => $bookingItem,
                 "success" => true
@@ -61,7 +61,7 @@ class BookingPostsController extends Controller
     public function create(Request $request): JsonResponse
     {
         try {
-            $newItem = $this->bookingPostService->create($request);
+            $newItem = $this->bookingRecordService->create($request);
             return response()->json([
                 "data" => $newItem,
                 "success" => true
@@ -84,7 +84,7 @@ class BookingPostsController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         try {
-            $updateItem = $this->bookingPostService->update($request, $id);
+            $updateItem = $this->bookingRecordService->update($request, $id);
             return response()->json([
                 "data" => $updateItem,
                 "success" => true
@@ -106,7 +106,7 @@ class BookingPostsController extends Controller
     public function delete(int $id): JsonResponse
     {
         try {
-            $this->bookingPostService->delete($id);
+            $this->bookingRecordService->delete($id);
             return response()->json([
                 "msg" => "Успешно удалено",
                 "success" => true
@@ -120,18 +120,13 @@ class BookingPostsController extends Controller
         }
     }
 
-    public function reservation(int $id, Request $request)
+    public function cancelReservation(int $id)
     {
         try {
-            $data = $this->validate($request, [
-                'start_date' => 'required|date_format:Y-m-d H:i:s',
-                'end_date' => 'required|date_format:Y-m-d H:i:s',
-            ]);
-            $reservation = $this->bookingPostService->reservation($data, $id);
+            $this->bookingRecordService->cancelReservation($id);
             return response()->json([
-                "success" => true,
-                "msg" => "Успешно забронировано",
-                "post" => $reservation
+                "msg" => "Запись отменена",
+                "success" => true
             ]);
         } catch (\Throwable $th) {
             return response()->json([

@@ -6,7 +6,9 @@ use App\Services\BookingObjectService;
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\BookingObjectInterface;
 use App\Interfaces\BookingPostInterface;
+use App\Interfaces\BookingRecordInterface;
 use App\Services\BookingPostService;
+use App\Services\BookingRecordService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,5 +21,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(BookingObjectInterface::class, BookingObjectService::class);
         $this->app->bind(BookingPostInterface::class, BookingPostService::class);
+        $this->app->bind(BookingRecordInterface::class, BookingRecordService::class);
     }
 }
