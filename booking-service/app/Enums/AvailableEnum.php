@@ -22,10 +22,10 @@ enum AvailableEnum
     public function name(): string
     {
         return match ($this) {
-            self::AVAILABLE => "Свободно",
+            self::AVAILABLE => "Съехали,свободно",
             self::RESERVED => "Зарезервировано",
             self::BUSY => "Занято",
-            self::CANCELLED => "Ошибка",
+            self::CANCELLED => "Отмененно",
         };
     }
 }

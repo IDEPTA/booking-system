@@ -57,9 +57,16 @@ class BookingRecordService implements BookingRecordInterface
     public function cancelReservation(int $id)
     {
         $bookengRecord = $this->show($id);
-        $bookingPost = $bookengRecord->booking_post()->first();
-        $bookingPost->cancelReservation();
-        $bookengRecord->delete($id);
+        if ($bookengRecord->available_status != AvailableEnum::AVAILABLE->name()) {
+            $bookingPost = $bookengRecord->booking_post()->first();
+            $bookingPost->cancelReservation();
+            $bookengRecord->update([
+                "available_status" => AvailableEnum::AVAILABLE->name(),
+                "payment_status" => PaymentStatusEnum::CANCELLED->name()
+            ]);
+            return 0;
+        }
+        throw new Exception("Ошибка отмены резервации", 400);
     }
 
     public function validated(Request $request)
