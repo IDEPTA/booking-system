@@ -2,14 +2,23 @@
 
 namespace App\Services;
 
+use App\Enums\AvailableEnum;
+use App\Enums\PaymentStatusEnum;
 use Exception;
-use Illuminate\Http\Request;
-use App\Interfaces\BookingPostInterface;
 use App\Models\BookingPost;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Interfaces\BookingPostInterface;
 use Illuminate\Support\Facades\Validator;
+use App\Interfaces\BookingRecordInterface;
 
 class BookingPostService implements BookingPostInterface
 {
+    public function __construct(
+        private readonly BookingRecordInterface $bookingRecordService
+    ) {}
+
     public function index()
     {
         $bookingPosts = BookingPost::with(['booking_object'])->get();
@@ -47,6 +56,18 @@ class BookingPostService implements BookingPostInterface
     {
         $deleteBookingPost = $this->show($id);
         $deleteBookingPost->delete();
+    }
+
+    public function reservation(array $data, int $id)
+    {
+        $post = $this->show($id);
+        $post->reservation();
+        $data["user_id"] = Auth::user()->id;
+        $data["booking_post_id"] = $post->id;
+        $data["available_status"] = AvailableEnum::RESERVED->name();
+        $data["payment_status"] = PaymentStatusEnum::PENDING->name();
+        $this->bookingRecordService->create($data);
+        return $post;
     }
 
     public function validated(Request $request)

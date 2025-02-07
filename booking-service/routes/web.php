@@ -38,5 +38,13 @@ $router->group(
         $router->post('/bookingPosts', "BookingPostsController@create");
         $router->put('/bookingPosts/{id}', "BookingPostsController@update");
         $router->delete('/bookingPosts/{id}', "BookingPostsController@delete");
+        $router->post('/bookingPosts/reservation/{id}', "BookingPostsController@reservation");
+
+        $router->get('/bookingRecords', "BookingRecordsController@index");
+        $router->get('/bookingRecords/{id}', "BookingRecordsController@show");
+        $router->post('/bookingRecords', "BookingRecordsController@create");
+        $router->put('/bookingRecords/{id}', "BookingRecordsController@update");
+        $router->delete('/bookingRecords/{id}', "BookingRecordsController@delete");
+        $router->get('/bookingRecords/cancelReservation/{id}', "BookingRecordsController@cancelReservation");
     }
 );
