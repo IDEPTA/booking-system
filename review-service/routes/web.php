@@ -16,3 +16,18 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(
+    ["middleware" => "auth",],
+    function () use ($router) {
+        $router->get('/routes', function () use ($router) {
+            return $router->getRoutes();
+        });
+
+        $router->get('/reviews', "ReviewController@index");
+        $router->get('/reviews/{id}', "ReviewController@show");
+        $router->post('/reviews', "ReviewController@create");
+        $router->put('/reviews/{id}', "ReviewController@update");
+        $router->delete('/reviews/{id}', "ReviewController@delete");
+    }
+);
