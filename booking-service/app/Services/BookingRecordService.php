@@ -16,7 +16,11 @@ class BookingRecordService implements BookingRecordInterface
     public function index()
     {
         $bookingRecords = BookingRecord::with(['booking_post.booking_object'])->get();
-
+        if ($bookingRecords) {
+            foreach ($bookingRecords as $value) {
+                $value['user'] = $value->users()['data'];
+            }
+        }
         return $bookingRecords;
     }
 
@@ -26,6 +30,7 @@ class BookingRecordService implements BookingRecordInterface
         if (!$bookingRecord) {
             throw new Exception("Запись не найдена", 404);
         }
+        $bookingRecord['user'] = $bookingRecord->users()['data'];
         return $bookingRecord;
     }
 
@@ -41,7 +46,11 @@ class BookingRecordService implements BookingRecordInterface
 
     public function update(Request $request, int $id)
     {
-        $updatedBookingRecord = $this->show($id);
+        $updatedBookingRecord =  BookingRecord::find($id);
+        if (!$updatedBookingRecord) {
+            throw new Exception("Запись не найдена", 404);
+        }
+
         $validationData = $this->validated($request);
         $updatedBookingRecord->update($validationData);
 

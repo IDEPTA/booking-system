@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\UsersExchangeService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,5 +27,13 @@ class BookingRecord extends Model
     public function booking_post()
     {
         return $this->belongsTo(BookingPost::class);
+    }
+
+    public function users()
+    {
+        $usersExchangeService =  app(UsersExchangeService::class);
+        $bearerToken = request()->bearerToken();
+
+        return $usersExchangeService->users($this->user_id, $bearerToken);
     }
 }

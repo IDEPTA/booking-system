@@ -13,6 +13,11 @@ class ReviewService implements ReviewInterface
     public function index()
     {
         $reviews = Review::all();
+        if ($reviews) {
+            foreach ($reviews as $value) {
+                $value->booking_records = $value->booking_records()['data'];
+            }
+        }
 
         return $reviews;
     }
@@ -23,6 +28,7 @@ class ReviewService implements ReviewInterface
         if (!$review) {
             throw new Exception("Объект не найден", 404);
         }
+        $review->booking_records = $review->booking_records()['data'];
 
         return $review;
     }
@@ -37,7 +43,10 @@ class ReviewService implements ReviewInterface
 
     public function update(Request $request, int $id)
     {
-        $updatedReview = $this->show($id);
+        $updatedReview = Review::find($id);
+        if (!$updatedReview) {
+            throw new Exception("Объект не найден", 404);
+        }
         $validationData = $this->validated($request);
         $updatedReview->update($validationData);
 

@@ -9,6 +9,7 @@ use App\Interfaces\BookingPostInterface;
 use App\Interfaces\BookingRecordInterface;
 use App\Services\BookingPostService;
 use App\Services\BookingRecordService;
+use App\Services\UsersExchangeService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +23,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(BookingObjectInterface::class, BookingObjectService::class);
         $this->app->bind(BookingPostInterface::class, BookingPostService::class);
         $this->app->bind(BookingRecordInterface::class, BookingRecordService::class);
+        $this->app->singleton(UsersExchangeService::class, function ($app) {
+            return new UsersExchangeService();
+        });
     }
 }
