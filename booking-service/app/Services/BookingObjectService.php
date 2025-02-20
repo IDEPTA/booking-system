@@ -16,7 +16,11 @@ class BookingObjectService implements BookingObjectInterface
     public function index()
     {
         $bookingItems = BookingObject::all();
-
+        if ($bookingItems) {
+            foreach ($bookingItems as $value) {
+                $value['user'] = $value->users()['data'];
+            }
+        }
         return $bookingItems;
     }
 
@@ -26,6 +30,8 @@ class BookingObjectService implements BookingObjectInterface
         if (!$bookingItem) {
             throw new Exception("booking item not found", 404);
         }
+        $bookingItem['user'] = $bookingItem->users()['data'];
+
         return $bookingItem;
     }
 
@@ -39,7 +45,11 @@ class BookingObjectService implements BookingObjectInterface
 
     public function update(Request $request, int $id)
     {
-        $updatedBookingItem = $this->show($id);
+        $updatedBookingItem = BookingObject::find($id);
+        if (!$updatedBookingItem) {
+            throw new Exception("booking item not found", 404);
+        }
+
         $validationData = $this->validated($request);
         $updatedBookingItem->update($validationData);
 

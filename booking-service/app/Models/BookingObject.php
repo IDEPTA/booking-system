@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Services\UsersExchangeService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BookingObject extends Model
 {
@@ -29,5 +30,13 @@ class BookingObject extends Model
     public function booking_post()
     {
         return $this->hasMany(BookingPost::class);
+    }
+
+    public function users()
+    {
+        $usersExchangeService =  app(UsersExchangeService::class);
+        $bearerToken = request()->bearerToken();
+
+        return $usersExchangeService->users($this->user_id, $bearerToken);
     }
 }
