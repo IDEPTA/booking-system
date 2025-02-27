@@ -2,14 +2,18 @@
 
 namespace App\Services;
 
-use App\Enums\AvailableEnum;
-use App\Enums\PaymentStatusEnum;
 use Exception;
+use Carbon\Carbon;
+use App\Enums\AvailableEnum;
 use Illuminate\Http\Request;
-use App\Interfaces\BookingRecordInterface;
 use App\Models\BookingRecord;
 use Illuminate\Validation\Rule;
+use Junges\Kafka\Facades\Kafka;
+use App\Enums\PaymentStatusEnum;
+use Junges\Kafka\Message\Message;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Interfaces\BookingRecordInterface;
 
 class BookingRecordService implements BookingRecordInterface
 {
@@ -65,14 +69,19 @@ class BookingRecordService implements BookingRecordInterface
 
     public function cancelReservation(int $id)
     {
-        $bookengRecord = $this->show($id);
-        if ($bookengRecord->available_status != AvailableEnum::AVAILABLE->name()) {
-            $bookingPost = $bookengRecord->booking_post()->first();
-            $bookingPost->cancelReservation();
-            $bookengRecord->update([
+        $bookingRecord = BookingRecord::with(['booking_post'])->find($id);
+        if (!$bookingRecord) {
+            throw new Exception("Запись не найдена", 404);
+        }
+        if ($bookingRecord->available_status != AvailableEnum::AVAILABLE->name()) {
+            $bookingPost = $bookingRecord->booking_post()->first();
+            $bookingRecord->update([
                 "available_status" => AvailableEnum::AVAILABLE->name(),
                 "payment_status" => PaymentStatusEnum::CANCELLED->name()
             ]);
+
+            $bookingPost->cancelReservation($bookingRecord);
+
             return 0;
         }
         throw new Exception("Ошибка отмены резервации", 400);
