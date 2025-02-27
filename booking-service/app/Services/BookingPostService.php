@@ -2,16 +2,19 @@
 
 namespace App\Services;
 
-use App\Enums\AvailableEnum;
-use App\Enums\PaymentStatusEnum;
 use Exception;
 use App\Models\BookingPost;
+use App\Enums\AvailableEnum;
 use Illuminate\Http\Request;
+use Junges\Kafka\Facades\Kafka;
+use App\Enums\PaymentStatusEnum;
+use Junges\Kafka\Message\Message;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\BookingPostInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Interfaces\BookingRecordInterface;
+use Carbon\Carbon;
 
 class BookingPostService implements BookingPostInterface
 {
@@ -61,12 +64,13 @@ class BookingPostService implements BookingPostInterface
     public function reservation(array $data, int $id)
     {
         $post = $this->show($id);
-        $post->reservation();
         $data["user_id"] = Auth::user()->id;
         $data["booking_post_id"] = $post->id;
         $data["available_status"] = AvailableEnum::RESERVED->name();
         $data["payment_status"] = PaymentStatusEnum::PENDING->name();
-        $this->bookingRecordService->create($data);
+        $bookingRecord = $this->bookingRecordService->create($data);
+
+        $post->reservation($bookingRecord);
         return $post;
     }
 
