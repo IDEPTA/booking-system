@@ -1,0 +1,8 @@
+start wt -w 0 nt -p "PowerShell" -d "D:\OSPanel\domains\booking-system\user-service" powershell -NoExit -Command "php artisan serve"
+start wt -w 0 nt -p "PowerShell" -d "D:\OSPanel\domains\booking-system\booking-service" powershell -NoExit -Command "php -S localhost:8001 -t public"
+start wt -w 0 nt -p "PowerShell" -d "D:\OSPanel\domains\booking-system\review-service" powershell -NoExit -Command "php -S localhost:8002 -t public"
+start wt -w 0 nt -p "PowerShell" -d "D:\OSPanel\domains\booking-system\notification-service" powershell -NoExit -Command "php -S localhost:8003 -t public"
+start wt -w 0 nt -p "PowerShell" -d "D:\OSPanel\domains\booking-system\logger-service" powershell -NoExit -Command "php -S localhost:8006 -t public"
+start wt -w 0 nt -p "PowerShell" -d "D:\kafka\bin\windows" powershell -NoExit -Command ".\kafka-server-start.bat D:\kafka\config\kraft\server.properties"
+@REM start wt -w 0 nt -p "PowerShell" -d "D:\OSPanel\domains\booking-system\notification-service" powershell -NoExit -Command "php artisan kafka:consume monitoring"
+@REM start wt -w 0 nt -p "PowerShell" -d "D:\OSPanel\domains\booking-system\notification-service" powershell -NoExit -Command "php artisan kafka:consume-emails"

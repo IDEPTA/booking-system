@@ -18,9 +18,9 @@ class KafkaEmailConsumer extends Command
         Log::info('Начинаем слушать топик');
         Kafka::createConsumer()
             ->subscribe('booking-events')
-            ->withConsumerGroupId('notification-service-group')
             ->withHandler(function (KafkaConsumerMessage $message) {
                 $data = $message->getBody();
+                echo "Сообщение пришло\n";
                 Mail::raw($data['message'], function ($msg) use ($data) {
                     $msg->to($data['user_email'])
                         ->subject($data['subject']);

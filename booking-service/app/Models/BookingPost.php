@@ -50,6 +50,7 @@ class BookingPost extends Model
             $message = new Message(
                 headers: [],
                 body: [
+                    'ip-address' => request()->ip(),
                     'user_email' => Auth::user()->email,
                     'subject'    => 'Подтверждение бронирования',
                     'message'    => "Уважаемый " .

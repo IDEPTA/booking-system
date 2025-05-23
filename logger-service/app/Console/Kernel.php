@@ -13,7 +13,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\KafkaEmailConsumer::class,
         \App\Console\Commands\LogConsumer::class
     ];
 
